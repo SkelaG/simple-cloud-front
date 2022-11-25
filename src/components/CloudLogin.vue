@@ -5,9 +5,11 @@
                 <h1 class="text-center">Авторизация</h1>
                 <p class="warning text-center" v-if="hasFail">Неверный логин или пароль</p>
                 <v-text-field required label="Email" v-model="email"></v-text-field>
-                <v-text-field required label="Пароль" v-model="password" type="password" v-on:keyup.enter="login"></v-text-field>
+                <v-text-field required label="Пароль" v-model="password" type="password" v-on:keyup.enter="login">
+                </v-text-field>
                 <v-btn elevation="2" block color="primary" rounded v-on:click="login">Войти</v-btn>
-                <p class="text-center sign-text">Нет аккаунта? <a v-on:click="setNeedLogin(false)">Зарегистрироваться</a></p>
+                <p class="text-center sign-text">Нет аккаунта? <a
+                        v-on:click="setNeedLogin(false)">Зарегистрироваться</a></p>
             </v-col>
             <v-col v-else>
                 <h1 class="text-center">Регистрация</h1>
@@ -23,7 +25,7 @@
 </template>
 
 <script>
-import UserApi from '../api/User.js';
+import User from '../api/User.js';
 
 export default {
     name: 'CloudLogin',
@@ -38,37 +40,48 @@ export default {
     },
     methods: {
         login: async function () {
-            this.loading = true
             try {
-                localStorage.token = await UserApi.login(this.email, this.password)
+                await User.login(this.email, this.password)
                 this.hasFail = false
             } catch (e) {
                 this.hasFail = true
             }
-            this.loading = false
+            this.redirectFromLogin()
         },
         setNeedLogin: function (value) {
             this.needLogin = value
         },
         registration: async function () {
             try {
-                localStorage.token = await UserApi.registration(this.email, this.password, this.name)
+                localStorage.token = await User.registration(this.email, this.password, this.name)
                 this.hasFail = false
                 this.needLogin = true
             } catch (e) {
                 this.hasFail = true
             }
+        },
+        redirectFromLogin: function () {
+            this.$emit('userLogin')
+            this.$router.push('/');
+        }
+    },
+    created: async function () {
+        try {
+            await User.me();
+            this.redirectFromLogin()
+        } catch (e) {
+            this.$emit('userLogout')
         }
     }
 }
 </script>
 
 <style>
-    .text-center {
-        align: center;
-    }
+.text-center {
+    align: center;
+}
 
-    .sign-text {
-        padding: 10px;
-    }
+.sign-text {
+    padding: 10px;
+}
 </style>
