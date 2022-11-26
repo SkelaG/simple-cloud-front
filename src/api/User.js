@@ -45,5 +45,6 @@ export default class User {
             throw new Error('unautentificated');
         })
         localStorage.token = null;
+        localStorage.rootDirectory = null;
     }
 }

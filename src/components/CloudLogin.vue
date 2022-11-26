@@ -65,7 +65,7 @@ export default {
             this.$router.push('/' + localStorage.rootDirectory);
         }
     },
-    created: async function () {
+    beforeEnter: async function () {
         try {
             await User.me();
             this.redirectFromLogin()

@@ -1,11 +1,11 @@
 <template>
-    <v-container>
-        <v-row align="start" align-content="start" no-gutters>
+    <v-container style="padding-left: 0px">
+        <v-row align="start" align-content="start">
             <v-col class="col-auto">
-                <file-modal name="Создать файл"  v-bind:current-directory="currentDirectory" need-file="true" v-bind:callback="createFile"></file-modal>
+                <file-modal name="Создать файл"  v-bind:current-directory="currentDirectory" need-file="true" @modalClosed="createFile"></file-modal>
             </v-col>
             <v-col class="col-auto">
-                <file-modal name="Создать папку" v-bind:current-directory="currentDirectory" v-bind:callback="createDirectory"></file-modal>
+                <file-modal name="Создать папку" v-bind:current-directory="currentDirectory" @modalClosed="createDirectory"></file-modal>
             </v-col>
         </v-row>
     </v-container>
@@ -13,7 +13,7 @@
 
 <script>
 import FileModal from './Modal.vue'
-import FilesApi from '../api/Files.js';
+import FilesApi from '../api/Files.js'
 
 export default {
     name: 'FileToolbar',
@@ -23,11 +23,13 @@ export default {
     },
     props: ['currentDirectory'],
     methods: {
-        createDirectory: async function (name) {
-            await FilesApi.createDirectory(name, this.currentDirectory)
+        createDirectory: async function (modalData) {
+            await FilesApi.createDirectory(modalData.fileName, this.currentDirectory)
+            this.$emit('updateList');
         },
-        createFile: async function (name, file) {
-            await FilesApi.createFile(name, this.currentDirectory, file)
+        createFile: async function (modalData) {
+            await FilesApi.createFile(modalData.fileName, this.currentDirectory, modalData.file)
+            this.$emit('updateList');
         },
     },
     components: {

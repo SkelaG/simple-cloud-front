@@ -1,6 +1,6 @@
 <template>
-    <div style="padding: 5px;">
-        <v-btn color="primary" dark @click.stop="dialog = true">
+    <div>
+        <v-btn color="primary" block dark @click.stop="dialog = true" style="margin-right: 10px;">
             {{ name }}
         </v-btn>
 
@@ -21,7 +21,7 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
 
-                    <v-btn color="blue darken-1" @click="callback(fileName, file), dialog = false">
+                    <v-btn color="blue darken-1" @click="closeModal">
                         Ок
                     </v-btn>
 
@@ -47,8 +47,12 @@ export default {
     methods: {
         selectFile: function (file) {
             this.file = file
-        }
+        },
+        closeModal: function () {
+            this.$emit('modalClosed', {file: this.file, fileName: this.fileName});
+            this.dialog = false
+        },
     },
-    props: ['name', 'currentDirectory', 'callback', 'needFile'],
+    props: ['name', 'needFile'],
 }
 </script>
