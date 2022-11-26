@@ -29,13 +29,15 @@ export default {
   },
   created: function () {
     if (!localStorage.token) {
+      this.isAuth = false
       this.$router.push('/login')
     }
     try {
       User.me()
       this.isAuth = true
     } catch (e) {
-      this.$router.push('login');     
+      this.isAuth = false
+      this.$router.push('/login');
     }
   }
 }

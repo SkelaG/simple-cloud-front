@@ -62,7 +62,7 @@ export default {
         },
         redirectFromLogin: function () {
             this.$emit('userLogin')
-            this.$router.push('/');
+            this.$router.push('/' + localStorage.rootDirectory);
         }
     },
     created: async function () {
