@@ -43,10 +43,10 @@ export default {
             try {
                 await User.login(this.email, this.password)
                 this.hasFail = false
+                this.redirectFromLogin()
             } catch (e) {
                 this.hasFail = true
             }
-            this.redirectFromLogin()
         },
         setNeedLogin: function (value) {
             this.needLogin = value
